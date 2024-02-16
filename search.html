@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Guitars</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="header">
+  <a href="index.html"><h1>Guitar Inventory Management</h1></a>
+  <div class="nav-links">
+    <nav>
+      <a href="about.html">About</a>
+      <a href="add.html">Add</a>
+      <a href="search.html">Search</a>
+    </nav>
+</div>
+<div>
+  
+  <form id="searchGuitarForm">
+
+    <label for="serialNumber">Serial Number:</label>
+    <input type="text" id="searchSerialNumber" name="serialNumber"><br><br>
+
+    <label for="price">Price:</label>
+    <input type="text" id="searchPrice" name="price"><br><br>
+
+    <label for="builder">Builder:</label>
+    <input type="text" id="searchBuilder" name="builder"><br><br>
+    
+    <label for="model">Model:</label>
+    <input type="text" id="searchModel" name="model"><br><br>
+    
+    <label for="type">Type:</label>
+    <input type="text" id="searchType" name="type"><br><br>
+    
+    <label for="backWood">Back wood:</label>
+    <input type="text" id="searchBackWood" name="backWood"><br><br>
+    
+    <label for="topWood">Top wood:</label>
+    <input type="text" id="searchTopWood" name="topWood"><br><br>
+    
+    <button type="button" onclick="searchGuitars()">Search</button>
+  </form>
+  
+  <table id="resultsTable">
+    <tr>
+      <th>Serial number</th>
+      <th>Builder</th>
+      <th>Model</th>
+      <th>Type</th>
+      <th>Back wood</th>
+      <th>Top wood</th>
+      <th>Price</th>
+    </tr>
+    
+  </table>
+</div>
+
+<script>
+
+// hardcoded guitars
+const guitarInventory = [
+  { serialNumber: "A123", price: 1500.00, builder: "Fender", model: "Stratocaster", type: "Electric", backWood: "Alder", topWood: "Maple" },
+  { serialNumber: "B456", price: 1600.00, builder: "Gibson", model: "Les Paul", type: "Electric", backWood: "Mahogany", topWood: "Maple" },
+  { serialNumber: "C789", price: 1200.00, builder: "Martin", model: "D-28", type: "Acoustic", backWood: "Rosewood", topWood: "Spruce" },
+  { serialNumber: "D012", price: 1100.00, builder: "Taylor", model: "314ce", type: "Acoustic", backWood: "Sapele", topWood: "Sitka Spruce" },
+  { serialNumber: "E345", price: 1300.00, builder: "Yamaha", model: "A5R", type: "Acoustic", backWood: "Rosewood", topWood: "Spruce" }
+];
+
+function searchGuitars() {
+  // get all the search boxes
+  const serialNumber = document.getElementById('searchSerialNumber').value.toLowerCase();
+  const priceInput = document.getElementById('searchPrice').value;
+  const builder = document.getElementById('searchBuilder').value.toLowerCase();
+  const model = document.getElementById('searchModel').value.toLowerCase();
+  const type = document.getElementById('searchType').value.toLowerCase();
+  const backWood = document.getElementById('searchBackWood').value.toLowerCase();
+  const topWood = document.getElementById('searchTopWood').value.toLowerCase();
+  
+  // clear results
+  const resultsTable = document.getElementById('resultsTable');
+  resultsTable.innerHTML = `
+    <tr>
+      <th>Serial number</th>
+      <th>Builder</th>
+      <th>Model</th>
+      <th>Type</th>
+      <th>Back wood</th>
+      <th>Top wood</th>
+      <th>Price</th>
+    </tr>`;
+
+  // filter guitars
+  const filteredGuitars = guitarInventory.filter(guitar => {
+    const price = guitar.price.toString(); 
+    return (serialNumber === "" || guitar.serialNumber.toLowerCase().includes(serialNumber)) &&
+           (priceInput === "" || price.includes(priceInput)) &&
+           (builder === "" || guitar.builder.toLowerCase().includes(builder)) &&
+           (model === "" || guitar.model.toLowerCase().includes(model)) &&
+           (type === "" || guitar.type.toLowerCase().includes(type)) &&
+           (backWood === "" || guitar.backWood.toLowerCase().includes(backWood)) &&
+           (topWood === "" || guitar.topWood.toLowerCase().includes(topWood));
+  });
+
+  //display guitars
+  filteredGuitars.forEach(guitar => {
+    const row = resultsTable.insertRow(-1); 
+    row.insertCell(-1).textContent = guitar.serialNumber;
+    row.insertCell(-1).textContent = guitar.builder;
+    row.insertCell(-1).textContent = guitar.model;
+    row.insertCell(-1).textContent = guitar.type;
+    row.insertCell(-1).textContent = guitar.backWood;
+    row.insertCell(-1).textContent = guitar.topWood;
+    row.insertCell(-1).textContent = guitar.price; 
+  });
+}
+
+
+
+</script>
+
+</body>
+</html>

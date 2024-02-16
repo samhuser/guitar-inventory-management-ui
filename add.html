@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Guitar</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="header">
+  <a href="index.html"><h1>Guitar Inventory Management</h1></a>
+  <div class="nav-links">
+    <nav>
+      <a href="about.html">About</a>
+      <a href="add.html">Add</a>
+      <a href="search.html">Search</a>
+    </nav>
+</div>
+<div>
+  
+  <form id="addGuitarForm">
+    <label for="serialNumber">Serial number:</label>
+    <input type="text" id="serialNumber" name="serialNumber"><br><br>
+    
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" step="0.01"><br><br>
+    
+    <label for="builder">Builder:</label>
+    <input type="text" id="builder" name="builder"><br><br>
+    
+    <label for="model">Model:</label>
+    <input type="text" id="model" name="model"><br><br>
+    
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type"><br><br>
+    
+    <label for="backWood">Back wood:</label>
+    <input type="text" id="backWood" name="backWood"><br><br>
+    
+    <label for="topWood">Top wood:</label>
+    <input type="text" id="topWood" name="topWood"><br><br>
+    
+    <button type="button" onclick="addGuitar()">Add the guitar</button>
+  </form>
+</div>
+
+<script>
+function addGuitar() {
+  const guitar = {
+    serialNumber: document.getElementById('serialNumber').value,
+    price: parseFloat(document.getElementById('price').value),
+    builder: document.getElementById('builder').value,
+    model: document.getElementById('model').value,
+    type: document.getElementById('type').value,
+    backWood: document.getElementById('backWood').value,
+    topWood: document.getElementById('topWood').value
+  };
+  alert(JSON.stringify(guitar, null, 2));
+}
+</script>
+
+</body>
+</html>
