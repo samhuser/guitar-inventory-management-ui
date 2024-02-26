@@ -45,17 +45,58 @@
 </div>
 
 <script>
-function addGuitar() {
-  const guitar = {
-    serialNumber: document.getElementById('serialNumber').value,
-    price: parseFloat(document.getElementById('price').value),
-    builder: document.getElementById('builder').value,
-    model: document.getElementById('model').value,
-    type: document.getElementById('type').value,
-    backWood: document.getElementById('backWood').value,
-    topWood: document.getElementById('topWood').value
-  };
-  alert(JSON.stringify(guitar, null, 2));
+async function addGuitar() {
+  let message = "";
+  let host = "http://localhost:8080";
+  var isGood = validateValue();
+  console.log(isGood);
+  if(isGood == false){
+    alert("Error there are empty fields");
+  }else{
+    const guitar = {
+      serialNumber: document.getElementById('serialNumber').value,
+      price: parseFloat(document.getElementById('price').value),
+      builder: document.getElementById('builder').value.toUpperCase(),
+      model: document.getElementById('model').value,
+      type: document.getElementById('type').value.toUpperCase(),
+      backwood: document.getElementById('backWood').value.toUpperCase(),
+      topwood: document.getElementById('topWood').value.toUpperCase()
+    };
+    let request = {
+        method: "POST",
+        headers: {
+           "Content-Type": "application/json"
+        },
+        body: JSON.stringify(guitar)
+    };
+    let response = await fetch(host+"/add", request);
+    if(response.status == 200) {
+      message = "The guitar was added successfully!";
+    } else {
+      console.log(response);
+      message = "Something went wrong! guitar data could not be saved.";
+    }
+    alert(message);
+  }
+}
+function validateValue(){
+  if(document.getElementById('serialNumber').value == null){
+    return false;
+  }else if(document.getElementById('price').value == null){
+    return false;
+  }else if(document.getElementById('builder').value== null){
+    return false;
+  }else if (document.getElementById('model').value== null){
+    return false;
+  }else if (document.getElementById('type').value== null){
+    return false;
+  }else if(document.getElementById('backWood').value== null){
+    return false;
+  }else if(document.getElementById('topWood').value == null){
+    return false;
+  }else{
+    return true;
+  }
 }
 </script>
 

@@ -68,17 +68,49 @@ const guitarInventory = [
   { serialNumber: "D012", price: 1100.00, builder: "Taylor", model: "314ce", type: "Acoustic", backWood: "Sapele", topWood: "Sitka Spruce" },
   { serialNumber: "E345", price: 1300.00, builder: "Yamaha", model: "A5R", type: "Acoustic", backWood: "Rosewood", topWood: "Spruce" }
 ];
-
-function searchGuitars() {
+function getParameter(){
+  let params = "";
+  if(document.getElementById('searchSerialNumber').value != null){
+    params+= "serialNumber="+document.getElementById('searchSerialNumber').value+"&";
+  }else if(document.getElementById('searchPrice').value != null){
+    params+= "price="+document.getElementById('searchPrice').value+"&";
+  }else if(document.getElementById('searchBuilder').value!= null){
+    params+= "builder="+document.getElementById('searchBuilder').value+"&";
+  }else if (document.getElementById('searchModel').value!= null){
+    params+= "model="+document.getElementById('searchModel').value+"&";
+  }else if (document.getElementById('searchType').value!= null){
+    params+= "type="+document.getElementById('searchType').value+"&";
+  }else if(document.getElementById('searchBackWood').value!= null){
+    params+= "backwood="+document.getElementById('searchBackWood').value+"&";
+  }else if(document.getElementById('searchTopWood').value != null){
+    params+= "topwood="+document.getElementById('searchTopWood').value+"&";
+  }
+  return params;
+}
+async function searchGuitars() {
   // get all the search boxes
-  const serialNumber = document.getElementById('searchSerialNumber').value.toLowerCase();
-  const priceInput = document.getElementById('searchPrice').value;
-  const builder = document.getElementById('searchBuilder').value.toLowerCase();
-  const model = document.getElementById('searchModel').value.toLowerCase();
-  const type = document.getElementById('searchType').value.toLowerCase();
-  const backWood = document.getElementById('searchBackWood').value.toLowerCase();
-  const topWood = document.getElementById('searchTopWood').value.toLowerCase();
-  
+  let host = "http://localhost:8080";
+
+  let request = {
+        method: "GET",
+        headers: {
+           "Content-Type": "application/json"
+        },
+  };
+  console.log(host + "/search?"+getParameter());
+  let response = await fetch(host + "/search?"+getParameter(), request)
+        .then(response => response.json())
+        .catch(error => {
+          console.log(error);
+          alert("Something went wrong!");
+          return [];
+        });         
+  if(response.status == 200) {
+      message = "The guitar was added successfully!";
+    } else {
+      console.log(response);
+      message = "Something went wrong! guitar data could not be saved.";
+    }
   // clear results
   const resultsTable = document.getElementById('resultsTable');
   resultsTable.innerHTML = `
@@ -92,27 +124,17 @@ function searchGuitars() {
       <th>Price</th>
     </tr>`;
 
-  // filter guitars
-  const filteredGuitars = guitarInventory.filter(guitar => {
-    const price = guitar.price.toString(); 
-    return (serialNumber === "" || guitar.serialNumber.toLowerCase().includes(serialNumber)) &&
-           (priceInput === "" || price.includes(priceInput)) &&
-           (builder === "" || guitar.builder.toLowerCase().includes(builder)) &&
-           (model === "" || guitar.model.toLowerCase().includes(model)) &&
-           (type === "" || guitar.type.toLowerCase().includes(type)) &&
-           (backWood === "" || guitar.backWood.toLowerCase().includes(backWood)) &&
-           (topWood === "" || guitar.topWood.toLowerCase().includes(topWood));
-  });
-
+  // filter guitars 
+  console.log(response);
   //display guitars
-  filteredGuitars.forEach(guitar => {
+  response.forEach(guitar => {
     const row = resultsTable.insertRow(-1); 
     row.insertCell(-1).textContent = guitar.serialNumber;
     row.insertCell(-1).textContent = guitar.builder;
     row.insertCell(-1).textContent = guitar.model;
     row.insertCell(-1).textContent = guitar.type;
-    row.insertCell(-1).textContent = guitar.backWood;
-    row.insertCell(-1).textContent = guitar.topWood;
+    row.insertCell(-1).textContent = guitar.backwood;
+    row.insertCell(-1).textContent = guitar.topwood;
     row.insertCell(-1).textContent = guitar.price; 
   });
 }
